@@ -32,13 +32,12 @@ logging.basicConfig(
 
 
 def check_tokens():
-    """Проверка токенов и переменных окружения"""
+    """Проверка токенов и переменных окружения."""
     return all([TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, PRACTICUM_TOKEN])
 
 
 def send_message(bot, message):
-    """Отправляет сообщение в TG чат, на основе переменной TELEGRAM_CHAT_ID.
-    Принимает на вход два параметра: экземпляр класса Bot и текст сообщения."""
+    """Отправляет сообщение в TG чат."""
     try:
         chat_id = TELEGRAM_CHAT_ID
         bot.send_message(chat_id, message)
@@ -64,8 +63,7 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    """Проверяет ответ API на корректность.
-    Функция должна вернуть список домашних работ (он может быть и пустым)"""
+    """Проверяет ответ API на корректность."""
     try:
         homework_list = response['homeworks']
         if (type(homework_list)) is not list:
@@ -79,7 +77,7 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Извлекает инфу из конкретной работе, которая поступила на вход"""
+    """Извлекает инфу из конкретной работе, которая поступила на вход."""
     if 'homework_name' not in homework:
         raise custom.HomeworkNameNotExist('Отсутствует "homework_name"')
     if 'status' not in homework:
