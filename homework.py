@@ -105,8 +105,10 @@ def parse_status(homework):
     if homework_status not in VERDICTS:
         raise ValueError('Получен неизвестный статус работы')
     verdict = VERDICTS[homework_status]
-    return (f'Изменился статус проверки работы "{homework_name}". '
-           f'{verdict}'.format(homework_name=homework_name, verdict=verdict))
+    return (
+        f'Изменился статус проверки работы "{homework_name}". '
+        f'{verdict}'.format(homework_name=homework_name, verdict=verdict)
+    )
 
 
 def main():
