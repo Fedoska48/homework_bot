@@ -114,8 +114,9 @@ def parse_status(homework):
         raise ValueError('Получен неизвестный статус работы')
     return (
         'Изменился статус проверки работы "{homework_name}". {verdict}'
-            .format(
-            homework_name=homework_name, verdict=VERDICTS[homework_status]
+        .format(
+            homework_name=homework_name,
+            verdict=VERDICTS[homework_status]
         )
     )
 
@@ -127,6 +128,7 @@ def main():
         raise custom.TokenError('Проблема с получением токенов!')
     current_timestamp = int(time.time())
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    message = ''
     current_report = dict(message=message)
     prev_report = {}
 
