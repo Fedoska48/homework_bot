@@ -84,7 +84,7 @@ def get_api_answer(current_timestamp):
     except Exception as error:
         raise ConnectionError(('При запросе к эндпойнту произошла ошибка:'
                                '{error}: {url}, {headers}, {params}.')
-                              .format(**pargs))
+                              .format(**pargs, error=error))
 
 
 def check_response(response):
@@ -126,6 +126,7 @@ def main():
         raise custom.TokenError('Проблема с получением токенов!')
     current_timestamp = int(time.time())
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
+    current_report = {} #без такого дополнения не пускает работу на ревью
     current_report['message'] = ''
     prev_report = {}
 
