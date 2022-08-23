@@ -71,8 +71,7 @@ def get_api_answer(current_timestamp):
         'params': params
     }
     logging.info(('Начался запрос к API. {url}, {headers}, {params}.')
-                 .format(url=pargs['url'], headers=pargs['headers'],
-                         params=pargs['params']))
+                 .format(**pargs))
     try:
         response = requests.get(**pargs)
         if response.status_code != HTTPStatus.OK:
@@ -83,10 +82,9 @@ def get_api_answer(current_timestamp):
         logging.info('Данные по API успешно получены')
         return response.json()
     except Exception as error:
-        raise ConnectionError(('{error}: {url}, {headers}, {params}.')
-                              .format(error=error, url=pargs['url'],
-                                      headers=pargs['headers'],
-                                      params=pargs['params']))
+        raise ConnectionError(('При запросе к эндпойнту произошла ошибка:'
+                               '{error}: {url}, {headers}, {params}.')
+                              .format(**pargs))
 
 
 def check_response(response):
@@ -128,15 +126,18 @@ def main():
         raise custom.TokenError('Проблема с получением токенов!')
     current_timestamp = int(time.time())
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    message = ''
-    current_report = dict(message=message)
+    current_report['message'] = ''
     prev_report = {}
 
     while True:
         try:
             response = get_api_answer(current_timestamp)
             homework = check_response(response)
-            message = parse_status(homework)
+            homework = homework[0]
+            if len(homework) != 0:
+                message = parse_status(homework)
+            else:
+                current_report['message'] = 'Новых домашек нет'
             if current_report != prev_report:
                 send_message(bot, message)
                 prev_report = current_report.copy()
@@ -150,7 +151,7 @@ def main():
             logging.error(f'{error}. Пустой ответ от API.')
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            current_report = dict(message=message)
+            current_report['message'] = ''
             prev_report = {}
             if current_report != prev_report:
                 logging.exception(f'Отправка сообщения о {error}')
