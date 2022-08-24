@@ -127,7 +127,7 @@ def main():
     current_timestamp = int(time.time())
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_report = {}
-    #без такого дополнения не пускает работу на ревью
+    # без такого дополнения не пускает работу на ревью
     current_report['message'] = ''
     prev_report = {}
 
