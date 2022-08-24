@@ -134,14 +134,15 @@ def main():
     while True:
         try:
             response = get_api_answer(current_timestamp)
-            homework = check_response(response)
-            homework = homework[0]
-            if len(homework) != 0:
+            homeworks = check_response(response)
+            if homeworks:
+                homework = homeworks[0]
                 message = parse_status(homework)
+                current_report['message'] = message
             else:
                 current_report['message'] = 'Новых домашек нет'
             if current_report != prev_report:
-                send_message(bot, message)
+                send_message(bot, current_report['message'])
                 prev_report = current_report.copy()
                 current_timestamp = response.get(
                     'current_date',
@@ -152,17 +153,11 @@ def main():
         except custom.EmptyResponseFromAPI as error:
             logging.error(f'{error}. Пустой ответ от API.')
         except Exception as error:
-            message = f'Сбой в работе программы: {error}'
-            current_report['message'] = ''
-            prev_report = {}
+            current_report['message'] = f'Сбой в работе программы: {error}'
             if current_report != prev_report:
                 logging.exception(f'Отправка сообщения о {error}')
-                send_message(bot, message)
+                send_message(bot, current_report['message'])
                 prev_report = current_report.copy()
-                current_timestamp = response.get(
-                    'current_date',
-                    current_timestamp
-                )
         finally:
             time.sleep(RETRY_TIME)
 
